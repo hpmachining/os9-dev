@@ -1,0 +1,13 @@
+post_install() {
+	ln -s /usr/lib/lwtools/ar /usr/bin/m6809-unknown-ar
+	ln -s /usr/lib/lwtools/as /usr/bin/m6809-unknown-as
+	ln -s /usr/lib/lwtools/ld /usr/bin/m6809-unknown-ld
+	ln -s /bin/true /usr/bin/m6809-unknown-ranlib
+}
+
+post_remove() {
+  rm /usr/bin/m6809-unknown-ar
+  rm /usr/bin/m6809-unknown-as
+  rm /usr/bin/m6809-unknown-ld
+  rm /usr/bin/m6809-unknown-ranlib
+}

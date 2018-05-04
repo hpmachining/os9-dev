@@ -10,6 +10,7 @@ license=('GPL3')
 groups=("os9-dev")
 source=("$url/$pkgname-$pkgver.tar.gz")
 md5sums=("2f13dd2e3908ca1fe20798bd708d8ec3")
+#install="$pkgname.install"
 
 build() {
 	cd "$pkgname-$pkgver"
@@ -32,9 +33,6 @@ package() {
 	ln -s "/usr/lib/$pkgname/ld" "$pkgdir/usr/bin/m6809-unknown-ld"
 	ln -s /bin/true "$pkgdir/usr/bin/m6809-unknown-ranlib"
 
-	# Install license files
-	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" COPYING GPL3 
-
 	# Install documentation
-	install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" docs/manual/manual.*
+	install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" docs/manual/manual.{html,pdf}
 }
