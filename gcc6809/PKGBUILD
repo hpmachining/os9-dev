@@ -1,0 +1,71 @@
+# Maintainer: Your Name <youremail@domain.com>
+
+pkgname=gcc6809
+pkgver=4.6.4
+pkgrel=1
+pkgdesc="The GNU C compiler for the M6809 architecture."
+arch=('x86_64')
+url="http://ppa.launchpad.net/tormodvolden/m6809/ubuntu/pool/main/g/$pkgname"
+license=('GPL3')
+groups=('os9-dev')
+depends=('libmpc')
+makedepends=('lwtools')
+source=("$url/${pkgname}_$pkgver.orig.tar.gz"
+				"gcc6809lw-4.6.4-9.patch")
+md5sums=('af4efdeac21b5518c7c0666aedc98fdf'
+         '491796ede7da122bb6e9ae71cd49d427')
+
+prepare() {
+	mv gcc/ "$pkgname-$pkgver"
+	cd "$pkgname-$pkgver"
+	patch -p1 -i "$srcdir/gcc6809lw-4.6.4-9.patch"
+	sed -i -e "s%@tex press@@gnu.org @end tex%press@@gnu.org% 
+		s%@tex sales@@gnu.org @end tex%sales@@gnu.org%" gcc/doc/gcc.texi
+}
+
+build() {
+	cd "$pkgname-$pkgver"
+	mkdir -v build-gcc
+	cd build-gcc
+	CPPFLAGS=""
+	CFLAGS="-O2"
+	../configure \
+			--prefix=/usr \
+			--libexecdir=/usr/lib \
+			--enable-languages=c \
+			--srcdir=.. \
+			--target=m6809-unknown \
+			--disable-libada \
+			--program-prefix=m6809-unknown- \
+			--enable-obsolete \
+			--disable-threads \
+			--disable-nsl \
+			--disable-libssp \
+			--with-as=/usr/bin/m6809-unknown-as \
+			--with-ld=/usr/bin/m6809-unknown-ld \
+			--with-ar=/usr/bin/m6809-unknown-ar
+
+	cd ..
+	make -C build-gcc all-gcc
+  make -C build-gcc	all-target-libgcc
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	make DESTDIR="$pkgdir/" -C build-gcc install-gcc install-target-libgcc
+
+	# No info files
+	rm -rf "$pkgdir/usr/share/info"
+
+	# Use our own man page section to avoid conflicts
+	mv "$pkgdir/usr/share/man/man7/gpl.7" \
+	   "$pkgdir/usr/share/man/man7/gpl.7gcc6809"
+	mv "$pkgdir/usr/share/man/man7/gfdl.7" \
+	   "$pkgdir/usr/share/man/man7/gfdl.7gcc6809"
+	mv "$pkgdir/usr/share/man/man7/fsf-funding.7" \
+	   "$pkgdir/usr/share/man/man7/fsf-funding.7gcc6809"
+
+	# empty folders
+	rmdir -p --ignore-fail-on-non-empty "$pkgdir/usr/m6809-unknown/lib"
+	rmdir -p --ignore-fail-on-non-empty "$pkgdir/usr/include"
+}

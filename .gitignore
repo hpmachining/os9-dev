@@ -1,0 +1,7 @@
+*.log
+src/
+pkg/
+*.gz
+*.xz
+*.zip
+*.proto

@@ -1,0 +1,51 @@
+# Maintainer: Paul Hentschel <youremail@domain.com>
+
+pkgname=toolshed-hg
+pkgver=r672.041c3b1b927b
+pkgrel=1
+pkgdesc="A package of utilities to perform cross-development from Linux computers to the Tandy Color Computer and Dragon microcomputers."
+arch=('x86_64')
+url="http://hg.code.sf.net/p/toolshed/code"
+license=('GPL')
+groups=('os9-dev')
+makedepends=('mercurial' 'discount')
+
+_hgroot="$url"
+_hgrepo="$pkgname"
+
+prepare() {
+  cd "$srcdir"
+  msg "Connecting to Mercurial server...."
+
+  if [[ -d "$_hgrepo" ]]; then
+    cd "$_hgrepo"
+    hg pull -u
+    msg "The local files are updated."
+  else
+    hg clone "$_hgroot" "$_hgrepo"
+  fi
+
+  msg "Mercurial checkout done or server timeout"
+}
+
+build() {
+  msg "Starting build..."
+
+  rm -rf "$srcdir/$_hgrepo-build"
+  cp -r "$srcdir/$_hgrepo" "$srcdir/$_hgrepo-build"
+  cd "$srcdir/$_hgrepo-build"
+
+  make -C build/unix 
+}
+
+pkgver() {
+  cd "$_hgrepo"
+  printf "r%s.%s" "$(hg identify -n)" "$(hg identify -i)" | sed s:+::g
+}
+
+package() {
+  cd "$srcdir/$_hgrepo-build"
+  make DESTDIR="$pkgdir/" -C build/unix install
+}
+
+# vim:set ts=2 sw=2 et:

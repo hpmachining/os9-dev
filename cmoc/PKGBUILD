@@ -1,0 +1,31 @@
+# Maintainer: Paul Hentschel <paul at hpminc dot com>
+pkgname=cmoc
+pkgver=0.1.51
+pkgrel=1
+pkgdesc="6809-generating cross-compiler for a subset of the C language."
+arch=('x86_64')
+url="http://perso.b2b2c.ca/~sarrazip/dev"
+license=('GPL3')
+groups=('os9-dev')
+depends=('lwtools')
+#makedepends=('lwtools')
+source=("$url/$pkgname-$pkgver.tar.gz")
+md5sums=('83eccfd2356ba405aed9fd1f85e847a7')
+
+build() {
+	cd "$pkgname-$pkgver"
+	mkdir build
+	cd build
+	../configure --prefix=/usr
+	make
+}
+
+check() {
+	cd "$pkgname-$pkgver/build"
+	make  -k check -j1
+}
+
+package() {
+	cd "$pkgname-$pkgver/build"
+	make DESTDIR="$pkgdir/" install
+}

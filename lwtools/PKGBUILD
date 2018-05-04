@@ -1,0 +1,40 @@
+# Maintainer: Paul Hentschel <paul at hpminc dot com>
+
+pkgname=lwtools
+pkgver=4.15
+pkgrel=1
+pkgdesc="The LW tool chain provides utilities for building binaries for MC6809 and HD6309 CPUs."
+arch=('x86_64')
+url="http://lwtools.projects.l-w.ca/releases/$pkgname"
+license=('GPL3')
+groups=("os9-dev")
+source=("$url/$pkgname-$pkgver.tar.gz")
+md5sums=("2f13dd2e3908ca1fe20798bd708d8ec3")
+
+build() {
+	cd "$pkgname-$pkgver"
+	make
+}
+
+check() {
+	cd "$pkgname-$pkgver"
+	make -k test
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	make DESTDIR="$pkgdir/" install
+
+	# Install scripts and create symbolic links
+	install -Dm755 -t "$pkgdir/usr/lib/$pkgname" extra/ar extra/as extra/ld
+	ln -s "/usr/lib/$pkgname/ar" "$pkgdir/usr/bin/m6809-unknown-ar"
+	ln -s "/usr/lib/$pkgname/as" "$pkgdir/usr/bin/m6809-unknown-as"
+	ln -s "/usr/lib/$pkgname/ld" "$pkgdir/usr/bin/m6809-unknown-ld"
+	ln -s /bin/true "$pkgdir/usr/bin/m6809-unknown-ranlib"
+
+	# Install license files
+	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" COPYING GPL3 
+
+	# Install documentation
+	install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" docs/manual/manual.*
+}
