@@ -1,4 +1,4 @@
-# Maintainer: Your Name <youremail@domain.com>
+# Maintainer: Paul Hentschel <paul at hpminc dot com>
 
 pkgname=gcc6809
 pkgver=4.6.4
@@ -11,53 +11,76 @@ groups=('os9-dev')
 depends=('libmpc')
 makedepends=('lwtools')
 source=("$url/${pkgname}_$pkgver.orig.tar.gz"
-				"gcc6809lw-4.6.4-9.patch")
+        "gcc6809lw-4.6.4-9.patch"
+        "texi2pod.patch")
 md5sums=('af4efdeac21b5518c7c0666aedc98fdf'
-         '491796ede7da122bb6e9ae71cd49d427')
+         '491796ede7da122bb6e9ae71cd49d427'
+         '9d425016330bf8c6ccafe25d52d89cf7')
 
 prepare() {
-	mv gcc/ "$pkgname-$pkgver"
-	cd "$pkgname-$pkgver"
-	patch -p1 -i "$srcdir/gcc6809lw-4.6.4-9.patch"
-	sed -i -e "s%@tex press@@gnu.org @end tex%press@@gnu.org% 
-		s%@tex sales@@gnu.org @end tex%sales@@gnu.org%" gcc/doc/gcc.texi
+  if [[ -d "$pkgname-$pkgver" ]]; then
+    rm -rf "$pkgname-$pkgver"
+  fi
+  mv gcc/ "$pkgname-$pkgver"
+  cd "$pkgname-$pkgver"
+  patch -p1 -i "$srcdir/gcc6809lw-4.6.4-9.patch"
+  patch -p1 -i "$srcdir/texi2pod.patch"
+  sed -i -e "s%@tex press@@gnu.org @end tex%press@@gnu.org% 
+    s%@tex sales@@gnu.org @end tex%sales@@gnu.org%" gcc/doc/gcc.texi
 }
 
 build() {
-	cd "$pkgname-$pkgver"
-	mkdir -v build-gcc
-	cd build-gcc
-	CPPFLAGS=""
-	CFLAGS="-O2"
-	../configure \
-			--prefix=/usr \
-			--libexecdir=/usr/lib \
-			--enable-languages=c \
-			--srcdir=.. \
-			--target=m6809-unknown \
-			--disable-libada \
-			--program-prefix=m6809-unknown- \
-			--enable-obsolete \
-			--disable-threads \
-			--disable-nsl \
-			--disable-libssp \
-			--with-as=/usr/bin/m6809-unknown-as \
-			--with-ld=/usr/bin/m6809-unknown-ld \
-			--with-ar=/usr/bin/m6809-unknown-ar
+  cd "$pkgname-$pkgver"
+  if [[ -d 'build-gcc' ]]; then
+    rm -rf build-gcc
+  fi
+  mkdir -v build-gcc
+  cd build-gcc
+  CPPFLAGS=""
+  CFLAGS="-O2"
+  ../configure \
+    --prefix=/usr \
+    --libexecdir=/usr/lib \
+    --enable-languages=c \
+    --srcdir=.. \
+    --target=m6809-unknown \
+    --disable-libada \
+    --program-prefix=m6809-unknown- \
+    --enable-obsolete \
+    --disable-threads \
+    --disable-nsl \
+    --disable-libssp \
+    --with-as=/usr/bin/m6809-unknown-as \
+    --with-ld=/usr/bin/m6809-unknown-ld \
+    --with-ar=/usr/bin/m6809-unknown-ar
 
-	cd ..
-	make -C build-gcc all-gcc
-  make -C build-gcc	all-target-libgcc
+  make all-gcc all-target-libgcc
 }
 
+#check() {
+#  cd "$pkgname-$pkgver/build-gcc"
+#  make -k check-gcc
+#}
+
 package() {
-	cd "$pkgname-$pkgver"
-	make DESTDIR="$pkgdir/" -C build-gcc install-gcc install-target-libgcc
+  CPPFLAGS=""
+  CFLAGS="-O2"
+  cd "$pkgname-$pkgver/build-gcc"
+  make DESTDIR="$pkgdir/" install-gcc install-target-libgcc
 
-	# No info files
-	rm -rf "$pkgdir/usr/share/info"
+  # Add prefix to info pages to avoid conflict
+  mv "$pkgdir/usr/share/info/cpp.info" \
+     "$pkgdir/usr/share/info/m6809-unknown-cpp.info" 
+  mv "$pkgdir/usr/share/info/cppinternals.info" \
+     "$pkgdir/usr/share/info/m6809-unknown-cppinternals.info" 
+  mv "$pkgdir/usr/share/info/gcc.info" \
+     "$pkgdir/usr/share/info/m6809-unknown-gcc.info" 
+  mv "$pkgdir/usr/share/info/gccinstall.info" \
+     "$pkgdir/usr/share/info/m6809-unknown-gccinstall.info" 
+  mv "$pkgdir/usr/share/info/gccint.info" \
+     "$pkgdir/usr/share/info/m6809-unknown-gccint.info" 
 
-	# Use our own man page section to avoid conflicts
+	# use our own man page section to avoid conflicts
 	mv "$pkgdir/usr/share/man/man7/gpl.7" \
 	   "$pkgdir/usr/share/man/man7/gpl.7gcc6809"
 	mv "$pkgdir/usr/share/man/man7/gfdl.7" \
@@ -65,7 +88,9 @@ package() {
 	mv "$pkgdir/usr/share/man/man7/fsf-funding.7" \
 	   "$pkgdir/usr/share/man/man7/fsf-funding.7gcc6809"
 
-	# empty folders
-	rmdir -p --ignore-fail-on-non-empty "$pkgdir/usr/m6809-unknown/lib"
-	rmdir -p --ignore-fail-on-non-empty "$pkgdir/usr/include"
+  # empty folders
+  rm -rf "$pkgdir/usr/m6809-unknown"
+  rm -rf "$pkgdir/usr/include"
 }
+
+# vim:set ts=2 sw=2 et:
