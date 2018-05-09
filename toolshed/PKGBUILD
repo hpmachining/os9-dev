@@ -1,55 +1,33 @@
 # Maintainer: Paul Hentschel <youremail@domain.com>
 
-pkgname=toolshed-hg
-pkgver=r672.041c3b1b927b
+pkgname=toolshed
+pkgver=2.2
 pkgrel=1
 pkgdesc="A package of utilities to perform cross-development to the Tandy Color Computer and Dragon microcomputers."
 arch=('x86_64')
 url="http://toolshed.sourceforge.net"
 license=('custom')
 groups=('os9-dev')
-makedepends=('mercurial' 'discount')
-source=("LICENSE")
-md5sums=('bed3f577dfb84088b9f89314a4900656')
-
-_hgroot="http://hg.code.sf.net/p/toolshed/code"
-
-pkgver() {
-  cd "$pkgname"
-  printf "r%s.%s" "$(hg identify -n)" "$(hg identify -i)" | sed s:+::g
-}
-
-prepare() {
-  cd "$srcdir"
-  msg "Connecting to Mercurial server...."
-
-  if [[ -d "$pkgname" ]]; then
-    cd "$pkgname"
-    hg pull -u
-    msg "The local files are updated."
-  else
-    hg clone "$_hgroot" "$pkgname"
-  fi
-
-  msg "Mercurial checkout done or server timeout"
-}
+makedepends=('discount')
+source=("https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809/+files/${pkgname}_${pkgver}.orig.tar.gz"
+        "copyright")
+md5sums=('b2092676c436622c0a171b991d0ef7cb'
+         '5065b9cf76bcf462e5a18e745142f04b')
 
 build() {
-  msg "Starting build..."
-
-  rm -rf "$srcdir/$pkgname-build"
-  cp -r "$srcdir/$pkgname" "$srcdir/$pkgname-build"
-  cd "$srcdir/$pkgname-build"
-
+  cd "$pkgname-$pkgver"
   make -C build/unix 
 }
 
 package() {
-  cd "$srcdir/$pkgname-build"
+  cd "$pkgname-$pkgver"
   make DESTDIR="$pkgdir/" -C build/unix install
 
   # Install license file
-  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir/LICENSE" 
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir/copyright" 
+  
+  # Install image for HTML manual
+  install -m644 doc/cover.jpg "$pkgdir/usr/share/doc/$pkgname/"
 }
 
 # vim:set ts=2 sw=2 et:

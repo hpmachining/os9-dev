@@ -8,23 +8,24 @@ url="http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html"
 license=('GPL3')
 groups=('os9-dev')
 depends=('lwtools')
+makedepends=('discount')
 source=("http://perso.b2b2c.ca/~sarrazip/dev/$pkgname-$pkgver.tar.gz")
 md5sums=('83eccfd2356ba405aed9fd1f85e847a7')
 
 build() {
-	cd "$pkgname-$pkgver"
-	mkdir build
-	cd build
-	../configure --prefix=/usr
-	make
+  cd "$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make && make html
 }
 
 check() {
-	cd "$pkgname-$pkgver/build"
+	cd "$pkgname-$pkgver"
 	make  -k check -j1
 }
 
 package() {
-	cd "$pkgname-$pkgver/build"
+	cd "$pkgname-$pkgver"
 	make DESTDIR="$pkgdir/" install
+  # Install html documentation
+  install -m644 doc/cmoc-{implementation,manual,vectrex}.html "$pkgdir/usr/share/doc/$pkgname"
 }
