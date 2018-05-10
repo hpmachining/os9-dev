@@ -3,7 +3,7 @@
 pkgname=toolshed
 pkgver=2.2
 pkgrel=1
-pkgdesc="A package of utilities to perform cross-development to the Tandy Color Computer and Dragon microcomputers."
+pkgdesc="Utilities for Tandy Color Computer and Dragon microcomputers cross-development."
 arch=('x86_64')
 url="http://toolshed.sourceforge.net"
 license=('custom')
@@ -11,8 +11,8 @@ groups=('os9-dev')
 makedepends=('discount')
 source=("https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809/+files/${pkgname}_${pkgver}.orig.tar.gz"
         "copyright")
-md5sums=('b2092676c436622c0a171b991d0ef7cb'
-         '5065b9cf76bcf462e5a18e745142f04b')
+sha256sums=('ab7201970e9c13e1cbdb9c8398bd888f870e75e33055b7a308bb039f67614c69'
+            'd8c35bfb5ed2c18e21303c263786788ff8b4b25a7ce940cf3d108b4e7e33d645')
 
 build() {
   cd "$pkgname-$pkgver"

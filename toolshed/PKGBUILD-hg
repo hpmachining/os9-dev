@@ -1,60 +1,42 @@
-# Maintainer: Paul Hentschel <youremail@domain.com>
+# Maintainer: Paul Hentschel <paul at hpminc dot com>
 
 pkgname=toolshed-hg
 pkgver=r672.041c3b1b927b
 pkgrel=1
-pkgdesc="A package of utilities to perform cross-development to the Tandy Color Computer and Dragon microcomputers."
+pkgdesc='Utilities for Tandy Color Computer and Dragon microcomputers cross-development.'
 arch=('x86_64')
-url="http://toolshed.sourceforge.net"
+url='http://toolshed.sourceforge.net'
 license=('custom')
 groups=('os9-dev')
 makedepends=('mercurial' 'discount')
-conflicts=('toolshed')
-source=("copyright")
-md5sums=('5065b9cf76bcf462e5a18e745142f04b')
-
-_hgroot="http://hg.code.sf.net/p/toolshed/code"
-_hgrepo="toolshed"
+conflicts=("${pkgname%-hg}")
+provides=("${pkgname%-hg}")
+source=("${pkgname%-hg}::hg+http://hg.code.sf.net/p/toolshed/code"
+        "copyright")
+sha256sums=('SKIP'
+            'd8c35bfb5ed2c18e21303c263786788ff8b4b25a7ce940cf3d108b4e7e33d645')
+#md5sums=('SKIP'
+#         '5065b9cf76bcf462e5a18e745142f04b')
 
 pkgver() {
-  cd "$_hgrepo"
-  printf "r%s.%s" "$(hg identify -n)" "$(hg identify -i)" | sed s:+::g
-}
-
-prepare() {
-  cd "$srcdir"
-  msg "Connecting to Mercurial server...."
-
-  if [[ -d "$_hgrepo" ]]; then
-    cd "$_hgrepo"
-    hg pull -u
-    msg "The local files are updated."
-  else
-    hg clone "$_hgroot" "$_hgrepo"
-  fi
-
-  msg "Mercurial checkout done or server timeout"
+  cd "$srcdir/${pkgname%-hg}"
+  printf "r%s.%s" "$(hg identify -n)" "$(hg identify -i)"
 }
 
 build() {
-  msg "Starting build..."
-
-  rm -rf "$srcdir/$_hgrepo-build"
-  cp -r "$srcdir/$_hgrepo" "$srcdir/$_hgrepo-build"
-  cd "$srcdir/$_hgrepo-build"
-
+  cd "$srcdir/${pkgname%-hg}"
   make -C build/unix 
 }
 
 package() {
-  cd "$srcdir/$_hgrepo-build"
+  cd "$srcdir/${pkgname%-hg}"
   make DESTDIR="$pkgdir/" -C build/unix install
 
   # Install license file
-  install -Dm644 -t "$pkgdir/usr/share/licenses/$_hgrepo" "$srcdir/copyright" 
+  install -Dm644 -t "$pkgdir/usr/share/licenses/${pkgname%-hg}" "$srcdir/copyright" 
   
   # Install image for HTML manual
-  install -m644 doc/cover.jpg "$pkgdir/usr/share/doc/$_hgrepo/"
+  install -m644 doc/cover.jpg "$pkgdir/usr/share/doc/${pkgname%-hg}/"
 }
 
 # vim:set ts=2 sw=2 et:
