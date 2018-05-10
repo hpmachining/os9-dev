@@ -10,7 +10,7 @@ groups=('os9-dev')
 depends=('lwtools')
 makedepends=('discount')
 source=("http://perso.b2b2c.ca/~sarrazip/dev/$pkgname-$pkgver.tar.gz")
-md5sums=('83eccfd2356ba405aed9fd1f85e847a7')
+sha256sums=('fbdeaa4272117a97bef8e663f4ada76c35491dd7afee470050dc273aca4916a6')
 
 build() {
   cd "$pkgname-$pkgver"

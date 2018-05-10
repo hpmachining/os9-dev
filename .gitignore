@@ -5,3 +5,4 @@ pkg/
 *.xz
 *.zip
 *.proto
+*.sig

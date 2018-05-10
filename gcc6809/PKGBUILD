@@ -12,10 +12,10 @@ depends=('libmpc')
 makedepends=('lwtools')
 source=("$url/${pkgname}_$pkgver.orig.tar.gz"
         "gcc6809lw-4.6.4-9.patch"
-        "texi2pod.patch")
-md5sums=('af4efdeac21b5518c7c0666aedc98fdf'
-         '491796ede7da122bb6e9ae71cd49d427'
-         '9d425016330bf8c6ccafe25d52d89cf7')
+        "gcc6809-texi.patch")
+sha256sums=('8b6e03ba5ead825b98cff228465f20e8ccd1bbd3f04e3d85cf71c9c13e089289'
+            '33d7f6e60ff5a528271b72bce26e5bb5157a88cedd5a904a9984b9d02205eeef'
+            '95698b2f78fdf8a2b5220acae70e9dde253fbec6441fc9d919f85ea91be06646')
 
 prepare() {
   if [[ -d "$pkgname-$pkgver" ]]; then
@@ -24,9 +24,7 @@ prepare() {
   mv gcc/ "$pkgname-$pkgver"
   cd "$pkgname-$pkgver"
   patch -p1 -i "$srcdir/gcc6809lw-4.6.4-9.patch"
-  patch -p1 -i "$srcdir/texi2pod.patch"
-  sed -i -e "s%@tex press@@gnu.org @end tex%press@@gnu.org% 
-    s%@tex sales@@gnu.org @end tex%sales@@gnu.org%" gcc/doc/gcc.texi
+  patch -p1 -i "$srcdir/gcc6809-texi.patch"
 }
 
 build() {
