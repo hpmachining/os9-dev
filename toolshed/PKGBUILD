@@ -8,11 +8,14 @@ arch=('x86_64')
 url="http://toolshed.sourceforge.net"
 license=('custom')
 groups=('os9-dev')
-makedepends=('discount')
-source=("https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809/+files/${pkgname}_${pkgver}.orig.tar.gz"
-        "copyright")
-sha256sums=('ab7201970e9c13e1cbdb9c8398bd888f870e75e33055b7a308bb039f67614c69'
-            'd8c35bfb5ed2c18e21303c263786788ff8b4b25a7ce940cf3d108b4e7e33d645')
+depends=('glibc')
+makedepends=('mercurial' 'discount')
+source=("$pkgname-$pkgver::hg+http://hg.code.sf.net/p/toolshed/code#tag=v2_2"
+        "copyright"
+        "license")
+sha256sums=('SKIP'
+            'd8c35bfb5ed2c18e21303c263786788ff8b4b25a7ce940cf3d108b4e7e33d645'
+            'f955c72a0ece251f411ffb127a7f452224ac52652c4b9628800dc67157e545f3')
 
 build() {
   cd "$pkgname-$pkgver"
@@ -23,8 +26,8 @@ package() {
   cd "$pkgname-$pkgver"
   make DESTDIR="$pkgdir/" -C build/unix install
 
-  # Install license file
-  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir/copyright" 
+  # Install license files
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir"/{copyright,license} 
   
   # Install image for HTML manual
   install -m644 doc/cover.jpg "$pkgdir/usr/share/doc/$pkgname/"

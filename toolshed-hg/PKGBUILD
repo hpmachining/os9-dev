@@ -8,15 +8,16 @@ arch=('x86_64')
 url='http://toolshed.sourceforge.net'
 license=('custom')
 groups=('os9-dev')
+depends=('glibc')
 makedepends=('mercurial' 'discount')
 conflicts=("${pkgname%-hg}")
 provides=("${pkgname%-hg}")
 source=("${pkgname%-hg}::hg+http://hg.code.sf.net/p/toolshed/code"
-        "copyright")
+        "copyright"
+        "license")
 sha256sums=('SKIP'
-            'd8c35bfb5ed2c18e21303c263786788ff8b4b25a7ce940cf3d108b4e7e33d645')
-#md5sums=('SKIP'
-#         '5065b9cf76bcf462e5a18e745142f04b')
+            'd8c35bfb5ed2c18e21303c263786788ff8b4b25a7ce940cf3d108b4e7e33d645'
+            'f955c72a0ece251f411ffb127a7f452224ac52652c4b9628800dc67157e545f3')
 
 pkgver() {
   cd "$srcdir/${pkgname%-hg}"
@@ -32,8 +33,8 @@ package() {
   cd "$srcdir/${pkgname%-hg}"
   make DESTDIR="$pkgdir/" -C build/unix install
 
-  # Install license file
-  install -Dm644 -t "$pkgdir/usr/share/licenses/${pkgname%-hg}" "$srcdir/copyright" 
+  # Install license files
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir"/{copyright,license} 
   
   # Install image for HTML manual
   install -m644 doc/cover.jpg "$pkgdir/usr/share/doc/${pkgname%-hg}/"
