@@ -78,13 +78,13 @@ package() {
   mv "$pkgdir/usr/share/info/gccint.info" \
      "$pkgdir/usr/share/info/m6809-unknown-gccint.info" 
 
-	# use our own man page section to avoid conflicts
-	mv "$pkgdir/usr/share/man/man7/gpl.7" \
-	   "$pkgdir/usr/share/man/man7/gpl.7gcc6809"
-	mv "$pkgdir/usr/share/man/man7/gfdl.7" \
-	   "$pkgdir/usr/share/man/man7/gfdl.7gcc6809"
-	mv "$pkgdir/usr/share/man/man7/fsf-funding.7" \
-	   "$pkgdir/usr/share/man/man7/fsf-funding.7gcc6809"
+  # use our own man page section to avoid conflicts
+  mv "$pkgdir/usr/share/man/man7/gpl.7" \
+     "$pkgdir/usr/share/man/man7/gpl.7gcc6809"
+  mv "$pkgdir/usr/share/man/man7/gfdl.7" \
+     "$pkgdir/usr/share/man/man7/gfdl.7gcc6809"
+  mv "$pkgdir/usr/share/man/man7/fsf-funding.7" \
+     "$pkgdir/usr/share/man/man7/fsf-funding.7gcc6809"
 
   # empty folders
   rm -rf "$pkgdir/usr/m6809-unknown"
