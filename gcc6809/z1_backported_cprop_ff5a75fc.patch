@@ -1,0 +1,63 @@
+From ff5a75fc05f8dc9b999dc378f3da0b6f686fde52 Mon Sep 17 00:00:00 2001
+From: rearnsha <rearnsha@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Wed, 20 Nov 2013 13:55:04 +0000
+Subject: [PATCH] PR rtl-optimization/54300
+
+gcc/
+
+	PR rtl-optimization/54300
+	* regcprop.c (copyprop_hardreg_forward_1): Ensure any unused
+	outputs in a single-set are killed from the value chains.
+
+gcc/testsuite:
+
+	PR rtl-optimization/54300
+	* gcc.target/arm/pr54300.C: New test.
+
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@205117 138bc75d-0d04-0410-961f-82ee72b054a4
+---
+ gcc/ChangeLog                          |  6 ++++
+ gcc/regcprop.c                         | 18 ++++++++++
+ gcc/testsuite/ChangeLog                |  5 +++
+ gcc/testsuite/gcc.target/arm/pr54300.C | 61 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 90 insertions(+)
+ create mode 100644 gcc/testsuite/gcc.target/arm/pr54300.C
+
+Index: gcc6809-4.6.4/gcc/regcprop.c
+===================================================================
+--- gcc6809-4.6.4.orig/gcc/regcprop.c	2016-08-17 00:46:52.300730740 +0200
++++ gcc6809-4.6.4/gcc/regcprop.c	2016-08-17 00:46:52.296730652 +0200
+@@ -741,6 +741,7 @@
+       int n_ops, i, alt, predicated;
+       bool is_asm, any_replacements;
+       rtx set;
++      rtx link;
+       bool replaced[MAX_RECOG_OPERANDS];
+       bool changed = false;
+ 
+@@ -808,6 +809,23 @@
+ 	if (recog_op_alt[i][alt].earlyclobber)
+ 	  kill_value (recog_data.operand[i], vd);
+ 
++      /* If we have dead sets in the insn, then we need to note these as we
++	 would clobbers.  */
++      for (link = REG_NOTES (insn); link; link = XEXP (link, 1))
++	{
++	  if (REG_NOTE_KIND (link) == REG_UNUSED)
++	    {
++	      kill_value (XEXP (link, 0), vd);
++	      /* Furthermore, if the insn looked like a single-set,
++		 but the dead store kills the source value of that
++		 set, then we can no-longer use the plain move
++		 special case below.  */
++	      if (set
++		  && reg_overlap_mentioned_p (XEXP (link, 0), SET_SRC (set)))
++		set = NULL;
++	    }
++	}
++
+       /* Special-case plain move instructions, since we may well
+ 	 be able to do the move from a different register class.  */
+       if (set && REG_P (SET_SRC (set)))

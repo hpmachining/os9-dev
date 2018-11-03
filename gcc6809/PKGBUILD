@@ -12,9 +12,13 @@ depends=('libmpc')
 makedepends=('lwtools')
 source=("$url/${pkgname}_$pkgver.orig.tar.gz"
         "gcc6809lw-4.6.4-9.patch"
+        "z1_backported_cprop_ff5a75fc.patch"
+        "z99_bump-version.patch"
         "gcc6809-texi.patch")
 sha256sums=('8b6e03ba5ead825b98cff228465f20e8ccd1bbd3f04e3d85cf71c9c13e089289'
             '33d7f6e60ff5a528271b72bce26e5bb5157a88cedd5a904a9984b9d02205eeef'
+            '54ef4662457fa5604cad0afee60840c7badcf92ceaca11fca9fe5e21df1fa7c6'
+            'c5319f8ea8900b66c4bd4b0decd3a4cbc591d18578ca6546a7a1818795f77251'
             '95698b2f78fdf8a2b5220acae70e9dde253fbec6441fc9d919f85ea91be06646')
 
 prepare() {
@@ -23,8 +27,10 @@ prepare() {
   fi
   mv gcc/ "$pkgname-$pkgver"
   cd "$pkgname-$pkgver"
-  patch -p1 -i "$srcdir/gcc6809lw-4.6.4-9.patch"
-  patch -p1 -i "$srcdir/gcc6809-texi.patch"
+  patch -p1 -i "$srcdir"/gcc6809lw-4.6.4-9.patch
+  patch -p1 -i "$srcdir"/z1_backported_cprop_ff5a75fc.patch
+  patch -p1 -i "$srcdir"/z99_bump-version.patch
+  patch -p1 -i "$srcdir"/gcc6809-texi.patch
 }
 
 build() {
@@ -35,7 +41,8 @@ build() {
   mkdir -v build-gcc
   cd build-gcc
   CPPFLAGS=""
-  CFLAGS="-O2"
+  CXXFLAGS="-O2 -Wno-error=format-security"
+  CFLAGS="-O2 -Wno-error=format-security"
   ../configure \
     --prefix=/usr \
     --libexecdir=/usr/lib \
@@ -87,8 +94,9 @@ package() {
 	   "$pkgdir/usr/share/man/man7/fsf-funding.7gcc6809"
 
   # empty folders
-  rm -rf "$pkgdir/usr/m6809-unknown"
-  rm -rf "$pkgdir/usr/include"
+  cd "$pkgdir/usr"
+  rmdir -p m6809-unknown/lib
+  rmdir include
 }
 
 # vim:set ts=2 sw=2 et:

@@ -1,33 +1,37 @@
-# Maintainer: Paul Hentschel <youremail@domain.com>
+# Maintainer: Paul Hentschel <paul at hpminc dot com>
 
 pkgname=toolshed
 pkgver=2.2
 pkgrel=1
+_revision='27485e1ea881574331a76d121a045dc00acbf350'
 pkgdesc="Utilities for Tandy Color Computer and Dragon microcomputers cross-development."
 arch=('x86_64')
 url="http://toolshed.sourceforge.net"
-license=('custom')
+license=('PerlArtistic')
 groups=('os9-dev')
 depends=('glibc')
 makedepends=('mercurial' 'discount')
-source=("$pkgname-$pkgver::hg+http://hg.code.sf.net/p/toolshed/code#tag=v2_2"
-        "copyright"
-        "license")
-sha256sums=('SKIP'
-            'd8c35bfb5ed2c18e21303c263786788ff8b4b25a7ce940cf3d108b4e7e33d645'
-            'f955c72a0ece251f411ffb127a7f452224ac52652c4b9628800dc67157e545f3')
+source=("$pkgname-$pkgver::hg+http://hg.code.sf.net/p/toolshed/code#revision=$_revision")
+sha256sums=('SKIP')
 
 build() {
   cd "$pkgname-$pkgver"
   make -C build/unix 
 }
 
+check() {
+  cd "$pkgname-$pkgver" 
+  tests/hybrid-dsk.sh
+  tests/multihdb-dsk.sh
+}
+
 package() {
   cd "$pkgname-$pkgver"
   make DESTDIR="$pkgdir/" -C build/unix install
 
-  # Install license files
-  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir"/{copyright,license} 
+  # Install license file
+  sed -n '/Copyright/,/PARTICULAR PURPOSE./p' casm/src/util.h > LICENSE
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
   
   # Install image for HTML manual
   install -m644 doc/cover.jpg "$pkgdir/usr/share/doc/$pkgname/"

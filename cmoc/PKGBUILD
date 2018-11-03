@@ -1,4 +1,5 @@
 # Maintainer: Paul Hentschel <paul at hpminc dot com>
+
 pkgname=cmoc
 pkgver=0.1.51
 pkgrel=1
@@ -7,7 +8,7 @@ arch=('x86_64')
 url="http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html"
 license=('GPL3')
 groups=('os9-dev')
-depends=('lwtools')
+depends=('perl' 'lwtools')
 makedepends=('discount')
 source=("http://perso.b2b2c.ca/~sarrazip/dev/$pkgname-$pkgver.tar.gz")
 sha256sums=('fbdeaa4272117a97bef8e663f4ada76c35491dd7afee470050dc273aca4916a6')
@@ -19,13 +20,16 @@ build() {
 }
 
 check() {
-	cd "$pkgname-$pkgver"
-	make  -k check -j1
+  cd "$pkgname-$pkgver"
+  make  -k check -j1
 }
 
 package() {
-	cd "$pkgname-$pkgver"
-	make DESTDIR="$pkgdir/" install
+  cd "$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+
   # Install html documentation
   install -m644 doc/cmoc-{implementation,manual,vectrex}.html "$pkgdir/usr/share/doc/$pkgname"
 }
+
+# vim:set ts=2 sw=2 et:
