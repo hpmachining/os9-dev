@@ -19,7 +19,7 @@ sha256sums=('SKIP'
 
 build() {
   cd "$pkgname-$pkgver"
-  make -C build/unix 
+  make -C build/unix
 }
 
 package() {
@@ -27,8 +27,8 @@ package() {
   make DESTDIR="$pkgdir/" -C build/unix install
 
   # Install license files
-  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir"/{copyright,license} 
-  
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir"/{copyright,license}
+
   # Install image for HTML manual
   install -m644 doc/cover.jpg "$pkgdir/usr/share/doc/$pkgname/"
 }

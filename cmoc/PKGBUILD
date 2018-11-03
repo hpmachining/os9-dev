@@ -19,13 +19,13 @@ build() {
 }
 
 check() {
-	cd "$pkgname-$pkgver"
-	make  -k check -j1
+  cd "$pkgname-$pkgver"
+  make  -k check -j1
 }
 
 package() {
-	cd "$pkgname-$pkgver"
-	make DESTDIR="$pkgdir/" install
+  cd "$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
   # Install html documentation
   install -m644 doc/cmoc-{implementation,manual,vectrex}.html "$pkgdir/usr/share/doc/$pkgname"
 }

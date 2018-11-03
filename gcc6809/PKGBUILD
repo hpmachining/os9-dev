@@ -68,23 +68,23 @@ package() {
 
   # Add prefix to info pages to avoid conflict
   mv "$pkgdir/usr/share/info/cpp.info" \
-     "$pkgdir/usr/share/info/m6809-unknown-cpp.info" 
+     "$pkgdir/usr/share/info/m6809-unknown-cpp.info"
   mv "$pkgdir/usr/share/info/cppinternals.info" \
-     "$pkgdir/usr/share/info/m6809-unknown-cppinternals.info" 
+     "$pkgdir/usr/share/info/m6809-unknown-cppinternals.info"
   mv "$pkgdir/usr/share/info/gcc.info" \
-     "$pkgdir/usr/share/info/m6809-unknown-gcc.info" 
+     "$pkgdir/usr/share/info/m6809-unknown-gcc.info"
   mv "$pkgdir/usr/share/info/gccinstall.info" \
-     "$pkgdir/usr/share/info/m6809-unknown-gccinstall.info" 
+     "$pkgdir/usr/share/info/m6809-unknown-gccinstall.info"
   mv "$pkgdir/usr/share/info/gccint.info" \
-     "$pkgdir/usr/share/info/m6809-unknown-gccint.info" 
+     "$pkgdir/usr/share/info/m6809-unknown-gccint.info"
 
-	# use our own man page section to avoid conflicts
-	mv "$pkgdir/usr/share/man/man7/gpl.7" \
-	   "$pkgdir/usr/share/man/man7/gpl.7gcc6809"
-	mv "$pkgdir/usr/share/man/man7/gfdl.7" \
-	   "$pkgdir/usr/share/man/man7/gfdl.7gcc6809"
-	mv "$pkgdir/usr/share/man/man7/fsf-funding.7" \
-	   "$pkgdir/usr/share/man/man7/fsf-funding.7gcc6809"
+  # use our own man page section to avoid conflicts
+  mv "$pkgdir/usr/share/man/man7/gpl.7" \
+     "$pkgdir/usr/share/man/man7/gpl.7gcc6809"
+  mv "$pkgdir/usr/share/man/man7/gfdl.7" \
+     "$pkgdir/usr/share/man/man7/gfdl.7gcc6809"
+  mv "$pkgdir/usr/share/man/man7/fsf-funding.7" \
+     "$pkgdir/usr/share/man/man7/fsf-funding.7gcc6809"
 
   # empty folders
   rm -rf "$pkgdir/usr/m6809-unknown"
