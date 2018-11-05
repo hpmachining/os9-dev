@@ -1,0 +1,14 @@
+# We label this version "pl9a" since it adds
+# z1_backported_cprop_ff5a75fc.patch
+
+Index: gcc6809-4.6.4/gcc/version.c
+===================================================================
+--- gcc6809-4.6.4.orig/gcc/version.c	2016-08-17 00:31:25.456425233 +0200
++++ gcc6809-4.6.4/gcc/version.c	2016-08-17 00:37:16.298031682 +0200
+@@ -32,5 +32,5 @@
+    BASEVER, DATESTAMP, DEVPHASE, and REVISION are defined by the
+    Makefile.  */
+ 
+-const char version_string[] = BASEVER DATESTAMP DEVPHASE REVISION " (gcc6809lw pl9)";
++const char version_string[] = BASEVER DATESTAMP DEVPHASE REVISION " (gcc6809lw pl9a)";
+ const char pkgversion_string[] = PKGVERSION;

@@ -1,23 +1,19 @@
 # Maintainer: Paul Hentschel <paul at hpminc dot com>
 
 pkgname=toolshed-hg
-pkgver=r672.041c3b1b927b
+pkgver=r673.6906ea14f8f5
 pkgrel=1
 pkgdesc='Utilities for Tandy Color Computer and Dragon microcomputers cross-development.'
 arch=('x86_64')
 url='http://toolshed.sourceforge.net'
-license=('custom')
+license=('PerlArtistic')
 groups=('os9-dev')
 depends=('glibc')
 makedepends=('mercurial' 'discount')
 conflicts=("${pkgname%-hg}")
 provides=("${pkgname%-hg}")
-source=("${pkgname%-hg}::hg+http://hg.code.sf.net/p/toolshed/code"
-        "copyright"
-        "license")
-sha256sums=('SKIP'
-            'd8c35bfb5ed2c18e21303c263786788ff8b4b25a7ce940cf3d108b4e7e33d645'
-            'f955c72a0ece251f411ffb127a7f452224ac52652c4b9628800dc67157e545f3')
+source=("${pkgname%-hg}::hg+http://hg.code.sf.net/p/toolshed/code")
+sha256sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/${pkgname%-hg}"
@@ -29,12 +25,19 @@ build() {
   make -C build/unix 
 }
 
+check() {
+  cd "$srcdir/${pkgname%-hg}"
+  tests/hybrid-dsk.sh
+  tests/multihdb-dsk.sh
+}
+
 package() {
   cd "$srcdir/${pkgname%-hg}"
   make DESTDIR="$pkgdir/" -C build/unix install
 
   # Install license files
-  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$srcdir"/{copyright,license} 
+  sed -n '/Copyright/,/PARTICULAR PURPOSE./p' casm/src/util.h > LICENSE
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
   
   # Install image for HTML manual
   install -m644 doc/cover.jpg "$pkgdir/usr/share/doc/${pkgname%-hg}/"

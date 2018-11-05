@@ -3,12 +3,12 @@ new file mode 100755
 index 0000000..8cb9f72
 --- /dev/null
 +++ b/build/newlib.6809
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,56 @@
 +#!/bin/sh
 +
 +unset MAKEFLAGS
-+prefix=/usr/local
-+target=m6809-unknown-none
++prefix=/usr
++target=m6809-unknown
 +sudo=sudo
 +
 +while [ "x$1" != "x" ]; do
@@ -23,15 +23,12 @@ index 0000000..8cb9f72
 +		exit 0
 +		;;
 +	config)
-+		# 4.4.0 is not working yet, so stay with 4.3.4
-+		CC_FOR_TARGET="${prefix}/bin/${target}-gcc-4.3.4" \
++		CC_FOR_TARGET="${prefix}/bin/${target}-gcc" \
 +		AR_FOR_TARGET="${prefix}/bin/${target}-ar" \
 +		LD_FOR_TARGET="${prefix}/bin/${target}-ld" \
 +		RANLIB_FOR_TARGET="${prefix}/bin/${target}-ranlib" \
-+		../configure --prefix=${prefix} --target="${target}" --disable-multilib \
-+		   --program-prefix=${target}- \
-+			--disable-malloc-debugging --with-gnu-ld --without-pic \
-+			--enable-target-optspace
++		../configure --prefix=${prefix} --target="${target}" \
++		   --program-prefix=${target}- 
 +		;;
 +	make)
 +		make
