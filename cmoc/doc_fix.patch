@@ -1,0 +1,20 @@
+diff -ruN old/doc/Makefile.in new/doc/Makefile.in
+--- old/doc/Makefile.in	2018-11-04 21:41:57.246502823 -0500
++++ new/doc/Makefile.in	2018-11-04 21:43:38.896500886 -0500
+@@ -508,12 +508,14 @@
+ 
+ $(PACKAGE)-manual.html: $(PACKAGE)-manual.markdown toc.pl
+ 	$(MARKDOWN) $(PACKAGE)-manual.markdown > $(PACKAGE)-manual.html
+-	$(PERL) -i toc.pl $(PACKAGE)-manual.html  # add table of contents in place
++	$(PERL) toc.pl $(PACKAGE)-manual.html > $(PACKAGE)-manual.html.new  # add table of contents in place
++	mv $(PACKAGE)-manual.html.new $(PACKAGE)-manual.html
+ 	grep '<H2>Table of Contents' $(PACKAGE)-manual.html  # check that it worked
+ 
+ $(PACKAGE)-implementation.html: $(PACKAGE)-implementation.markdown toc.pl
+ 	$(MARKDOWN) $(PACKAGE)-implementation.markdown > $(PACKAGE)-implementation.html
+-	$(PERL) -i toc.pl $(PACKAGE)-implementation.html  # add table of contents in place
++	$(PERL) toc.pl $(PACKAGE)-implementation.html > $(PACKAGE)-implementation.html.new  # add table of contents in place
++	mv $(PACKAGE)-implementation.html.new $(PACKAGE)-implementation.html
+ 	grep '<H2>Table of Contents' $(PACKAGE)-implementation.html  # check that it worked
+ 
+ $(PACKAGE)-vectrex.html: $(PACKAGE)-vectrex.markdown
