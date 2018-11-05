@@ -1,7 +1,7 @@
 # Maintainer: Paul Hentschel <youremail@domain.com>
 
 pkgname=cmoc_os9-git
-pkgver=r76.23b4cb2
+pkgver=r85.9f9dfda
 pkgrel=1
 pkgdesc="CMOC C Library support for OS-9/NitrOS-9"
 arch=('x86_64')
