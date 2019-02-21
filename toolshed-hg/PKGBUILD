@@ -1,38 +1,44 @@
 # Maintainer: Paul Hentschel <paul at hpminc dot com>
 
 pkgname=toolshed-hg
-pkgver=r673.6906ea14f8f5
+pkgver=r674.cc0c69db5793
 pkgrel=1
 pkgdesc='Utilities for Tandy Color Computer and Dragon microcomputers cross-development.'
 arch=('x86_64')
 url='http://toolshed.sourceforge.net'
 license=('PerlArtistic')
 groups=('os9-dev')
-depends=('glibc')
+depends=('fuse2')
 makedepends=('mercurial' 'discount')
 conflicts=("${pkgname%-hg}")
 provides=("${pkgname%-hg}")
 source=("${pkgname%-hg}::hg+http://hg.code.sf.net/p/toolshed/code")
 sha256sums=('SKIP')
 
+prepare() {
+  cd "${pkgname%-hg}/build/unix"
+  sed -i '/(CC)/ s/$/ $(LDFLAGS)/' ar2/Makefile
+  sed -i '/(CC)/ s/$/ $(LDFLAGS)/' makewav/Makefile
+}
+
 pkgver() {
-  cd "$srcdir/${pkgname%-hg}"
-  printf "r%s.%s" "$(hg identify -n)" "$(hg identify -i)"
+  cd "${pkgname%-hg}"
+  printf "r%s.%s" "$(hg identify -n)" "$(hg identify -i)" | sed 's/+//g'
 }
 
 build() {
-  cd "$srcdir/${pkgname%-hg}"
+  cd "${pkgname%-hg}"
   make -C build/unix 
 }
 
 check() {
-  cd "$srcdir/${pkgname%-hg}"
+  cd "${pkgname%-hg}"
   tests/hybrid-dsk.sh
   tests/multihdb-dsk.sh
 }
 
 package() {
-  cd "$srcdir/${pkgname%-hg}"
+  cd "${pkgname%-hg}"
   make DESTDIR="$pkgdir/" -C build/unix install
 
   # Install license files
