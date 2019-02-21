@@ -3,16 +3,21 @@
 pkgname=toolshed
 pkgver=2.2
 pkgrel=1
-_revision='27485e1ea881574331a76d121a045dc00acbf350'
 pkgdesc="Utilities for Tandy Color Computer and Dragon microcomputers cross-development."
 arch=('x86_64')
 url="http://toolshed.sourceforge.net"
 license=('PerlArtistic')
 groups=('os9-dev')
-depends=('glibc')
+depends=('fuse2')
 makedepends=('mercurial' 'discount')
-source=("$pkgname-$pkgver::hg+http://hg.code.sf.net/p/toolshed/code#revision=$_revision")
-sha256sums=('SKIP')
+source=("https://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
+sha256sums=('ab7201970e9c13e1cbdb9c8398bd888f870e75e33055b7a308bb039f67614c69')
+
+prepare() {
+  cd "$pkgname-$pkgver/build/unix"
+  sed -i '/(CC)/ s/$/ $(LDFLAGS)/' ar2/Makefile
+  sed -i '/(CC)/ s/$/ $(LDFLAGS)/' makewav/Makefile
+}
 
 build() {
   cd "$pkgname-$pkgver"
