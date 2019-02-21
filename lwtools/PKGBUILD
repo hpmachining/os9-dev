@@ -1,7 +1,7 @@
 # Maintainer: Paul Hentschel <paul at hpminc dot com>
 
 pkgname=lwtools
-pkgver=4.15
+pkgver=4.16
 pkgrel=1
 pkgdesc="Cross-development tools for the Motorola 6809 and Hitachi 6309 microprocessors."
 arch=('x86_64')
@@ -9,7 +9,7 @@ url="http://lwtools.projects.l-w.ca"
 license=('GPL3')
 groups=('os9-dev')
 source=("$url/releases/$pkgname/$pkgname-$pkgver.tar.gz")
-sha256sums=('2f098c59369c5588f77fb173df3642b7f0b9d2638f4947eb70403294fd9fee57')
+sha256sums=('e4de2be9cd2407036ffb45ae562d8df653a30776a2d838798e08cec558ee192a')
 
 build() {
   cd "$pkgname-$pkgver"
