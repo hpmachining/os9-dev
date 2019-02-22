@@ -13,11 +13,13 @@ makedepends=('lwtools')
 source=("$url/${pkgname}_$pkgver.orig.tar.gz"
         "gcc6809lw-4.6.4-9.patch"
         "z1_backported_cprop_ff5a75fc.patch"
+        "z2_ignore_stack_protector_strong.patch"
         "z99_bump-version.patch"
         "gcc6809-texi.patch")
 sha256sums=('8b6e03ba5ead825b98cff228465f20e8ccd1bbd3f04e3d85cf71c9c13e089289'
             '33d7f6e60ff5a528271b72bce26e5bb5157a88cedd5a904a9984b9d02205eeef'
             '54ef4662457fa5604cad0afee60840c7badcf92ceaca11fca9fe5e21df1fa7c6'
+            '33714b348ffcb81e27b85fa93adeb98bf2ece8bdc0d75d4776f1296b02f0a377'
             'c5319f8ea8900b66c4bd4b0decd3a4cbc591d18578ca6546a7a1818795f77251'
             '95698b2f78fdf8a2b5220acae70e9dde253fbec6441fc9d919f85ea91be06646')
 
@@ -29,6 +31,7 @@ prepare() {
   cd "$pkgname-$pkgver"
   patch -p1 -i "$srcdir"/gcc6809lw-4.6.4-9.patch
   patch -p1 -i "$srcdir"/z1_backported_cprop_ff5a75fc.patch
+  patch -p1 -i "$srcdir"/z2_ignore_stack_protector_strong.patch
   patch -p1 -i "$srcdir"/z99_bump-version.patch
   patch -p1 -i "$srcdir"/gcc6809-texi.patch
 }
@@ -40,9 +43,31 @@ build() {
   fi
   mkdir -v build-gcc
   cd build-gcc
+
+  # makepkg flags
+  #CPPFLAGS="-D_FORTIFY_SOURCE=2"
+  #CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt"
+  #CXXFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt"
+
+  # Doesn't work
+  #CPPFLAGS="-D_FORTIFY_SOURCE=2"
+  #CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wno-error=format-security"
+  #CXXFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wno-error=format-security"
+
+  #CPPFLAGS="$CPPFLAGS -D_FORTIFY_SOURCE=0"
+  #CPPFLAGS=""
+  #CFLAGS="-O2 -fstack-protector-strong -Wno-error=format-security"
+  #CXXFLAGS="-O2 -fstack-protector-strong -Wno-error=format-security"
+  #CFLAGS="-march=x86-64 -mtune=generic -O2 -fstack-protector-strong -Wno-error=format-security"
+  #CXXFLAGS="-march=x86-64 -mtune=generic -O2 -fstack-protector-strong -Wno-error=format-security"
+
+#  CXXFLAGS="-O2 -Wno-error=format-security"
+#  CXXFLAGS="$CXXFLAGS -Wno-error=format-security"
+#  CFLAGS="-O2 -Wno-error=format-security"
+#  CFLAGS="$CFLAGS -Wno-error=format-security"
   CPPFLAGS=""
-  CXXFLAGS="-O2 -Wno-error=format-security"
-  CFLAGS="-O2 -Wno-error=format-security"
+  CFLAGS="-O2 -pipe -fstack-protector-strong -Wno-error=format-security"
+  CXXFLAGS="-O2 -pipe -fstack-protector-strong -Wno-error=format-security"
   ../configure \
     --prefix=/usr \
     --libexecdir=/usr/lib \

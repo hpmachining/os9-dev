@@ -1,0 +1,23 @@
+#
+# Modern environments add fstack-protector-strong to their
+# default build flags. To simplify cross-building libgcc
+# we will add the option but ignore it.
+#
+# 2018 Tormod Volden
+#
+
+Index: gcc6809-4.6.4/gcc/common.opt
+===================================================================
+--- gcc6809-4.6.4.orig/gcc/common.opt
++++ gcc6809-4.6.4/gcc/common.opt
+@@ -1789,6 +1789,10 @@ fstack-protector-all
+ Common Report RejectNegative Var(flag_stack_protect, 2)
+ Use a stack protection method for every function
+ 
++fstack-protector-strong
++Common Ignore
++Does nothing.  Preserved for upward compatibility.
++
+ fstack-usage
+ Common RejectNegative Var(flag_stack_usage)
+ Output stack usage information on a per-function basis
