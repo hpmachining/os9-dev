@@ -5,17 +5,19 @@ pkgver=4.6.4
 pkgrel=1
 pkgdesc="The GNU C compiler for the M6809 architecture."
 arch=('x86_64')
-url="http://ppa.launchpad.net/tormodvolden/m6809/ubuntu/pool/main/g/$pkgname"
+url="https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809"
 license=('GPL3')
 groups=('os9-dev')
 depends=('libmpc')
 makedepends=('lwtools')
-source=("$url/${pkgname}_$pkgver.orig.tar.gz"
-        "gcc6809lw-4.6.4-9.patch"
-        "z1_backported_cprop_ff5a75fc.patch"
-        "z2_ignore_stack_protector_strong.patch"
-        "z99_bump-version.patch"
-        "gcc6809-texi.patch")
+source=(
+  "http://ppa.launchpad.net/tormodvolden/m6809/ubuntu/pool/main/g/$pkgname/${pkgname}_$pkgver.orig.tar.gz"
+  "gcc6809lw-4.6.4-9.patch"
+  "z1_backported_cprop_ff5a75fc.patch"
+  "z2_ignore_stack_protector_strong.patch"
+  "z99_bump-version.patch"
+  "gcc6809-texi.patch"
+)
 sha256sums=('8b6e03ba5ead825b98cff228465f20e8ccd1bbd3f04e3d85cf71c9c13e089289'
             '33d7f6e60ff5a528271b72bce26e5bb5157a88cedd5a904a9984b9d02205eeef'
             '54ef4662457fa5604cad0afee60840c7badcf92ceaca11fca9fe5e21df1fa7c6'
@@ -44,30 +46,9 @@ build() {
   mkdir -v build-gcc
   cd build-gcc
 
-  # makepkg flags
-  #CPPFLAGS="-D_FORTIFY_SOURCE=2"
-  #CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt"
-  #CXXFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt"
-
-  # Doesn't work
-  #CPPFLAGS="-D_FORTIFY_SOURCE=2"
-  #CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wno-error=format-security"
-  #CXXFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wno-error=format-security"
-
-  #CPPFLAGS="$CPPFLAGS -D_FORTIFY_SOURCE=0"
-  #CPPFLAGS=""
-  #CFLAGS="-O2 -fstack-protector-strong -Wno-error=format-security"
-  #CXXFLAGS="-O2 -fstack-protector-strong -Wno-error=format-security"
-  #CFLAGS="-march=x86-64 -mtune=generic -O2 -fstack-protector-strong -Wno-error=format-security"
-  #CXXFLAGS="-march=x86-64 -mtune=generic -O2 -fstack-protector-strong -Wno-error=format-security"
-
-#  CXXFLAGS="-O2 -Wno-error=format-security"
-#  CXXFLAGS="$CXXFLAGS -Wno-error=format-security"
-#  CFLAGS="-O2 -Wno-error=format-security"
-#  CFLAGS="$CFLAGS -Wno-error=format-security"
   CPPFLAGS=""
-  CFLAGS="-O2 -pipe -fstack-protector-strong -Wno-error=format-security"
-  CXXFLAGS="-O2 -pipe -fstack-protector-strong -Wno-error=format-security"
+  CFLAGS="-O2 -fstack-protector-strong -Wno-error=format-security"
+  CXXFLAGS="-O2 -fstack-protector-strong -Wno-error=format-security"
   ../configure \
     --prefix=/usr \
     --libexecdir=/usr/lib \
@@ -87,14 +68,9 @@ build() {
   make all-gcc all-target-libgcc
 }
 
-#check() {
-#  cd "$pkgname-$pkgver/build-gcc"
-#  make -k check-gcc
-#}
-
 package() {
-  CPPFLAGS=""
-  CFLAGS="-O2"
+#  CPPFLAGS=""
+#  CFLAGS="-O2"
   cd "$pkgname-$pkgver/build-gcc"
   make DESTDIR="$pkgdir/" install-gcc install-target-libgcc
 
