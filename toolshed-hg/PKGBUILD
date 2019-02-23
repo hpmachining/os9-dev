@@ -1,4 +1,4 @@
-# Maintainer: Paul Hentschel <paul at hpminc dot com>
+# Maintainer: Paul Hentschel <aur at hpminc dot com>
 
 pkgname=toolshed-hg
 pkgver=r674.cc0c69db5793

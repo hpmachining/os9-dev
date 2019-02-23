@@ -1,4 +1,4 @@
-# Maintainer: Paul Hentschel <paul at hpminc dot com>
+# Maintainer: Paul Hentschel <aur at hpminc dot com>
 
 pkgname=gcc6809
 pkgver=4.6.4
